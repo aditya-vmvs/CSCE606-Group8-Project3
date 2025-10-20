@@ -79,4 +79,4 @@ gem "omniauth-google-oauth2"
 
 gem "dotenv-rails"
 
-gem "pundit"
+gem "pundit", "~> 2.5"

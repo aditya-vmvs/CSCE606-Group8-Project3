@@ -523,7 +523,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection
   propshaft
   puma (>= 5.0)
-  pundit
+  pundit (~> 2.5)
   rails (~> 8.0.3)
   rspec-rails
   rubocop-rails-omakase
