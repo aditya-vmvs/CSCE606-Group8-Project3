@@ -70,7 +70,6 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
   Dir[Rails.root.join("spec/support/**/*.rb")].sort_by(&:to_s).each { |f| require f }
-
 end
 RSpec.configure do |config|
   # Use `build(:user)` / `create(:user)` etc.
