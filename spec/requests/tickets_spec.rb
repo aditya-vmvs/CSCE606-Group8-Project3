@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "Tickets", type: :request do
-  let(:requester) { FactoryBot.create(:user, role: :requester) }
-  let(:agent) { FactoryBot.create(:user, role: :agent) }
-  let(:admin) { FactoryBot.create(:user, role: :admin) }
+  let(:requester) { FactoryBot.create(:user, role: :user) }
+  let(:agent) { FactoryBot.create(:user, role: :staff) }
+  let(:admin) { FactoryBot.create(:user, role: :sysadmin) }
 
   describe "POST /tickets/:id/assign" do
     let(:ticket) { FactoryBot.create(:ticket, requester: requester) }
@@ -42,8 +42,8 @@ RSpec.describe "Tickets", type: :request do
       end
 
       it 'assigns ticket to next agent in rotation' do
-        agent1 = FactoryBot.create(:user, role: :agent, name: 'Agent 1')
-        agent2 = FactoryBot.create(:user, role: :agent, name: 'Agent 2')
+        agent1 = create(:user, :agent, name: 'Agent 1')
+        agent2 = create(:user, :agent, name: 'Agent 2')
 
         post tickets_path, params: { ticket: { subject: 'Test', description: 'Test desc', priority: 'normal' } }
         ticket = Ticket.last

@@ -148,13 +148,12 @@ RSpec.describe "Users", type: :request do
       end
     end
 
-    context "when not signed in" do {
+    context "when not signed in" do
       it "redirects to login" do
         victim = create(:user, provider: provider, uid: "u-victim3", email: "victim3@example.com")
         delete user_path(victim)
         expect(response).to redirect_to(login_path)
       end
-    }
     end
   end
 end

@@ -8,15 +8,15 @@ FactoryBot.define do
     role { :requester }
 
     trait :requester do
-      role { :requester }
+      role { :user }
     end
 
     trait :agent do
-      role { :agent }
+      role { :staff }
     end
 
     trait :admin do
-      role { :admin }
+      role { :sysadmin }
     end
   end
 end
