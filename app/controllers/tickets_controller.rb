@@ -70,7 +70,7 @@ class TicketsController < ApplicationController
   end
 
   def next_agent_in_rotation
-    agents = User.where(role: :agent).order(:id)
+    agents = User.where(role: :staff).order(:id)
     return agents.first if agents.empty?
 
     last_assigned_index = Setting.get("last_assigned_index")

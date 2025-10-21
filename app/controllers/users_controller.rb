@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :require_login
-  before_action :require_sysadmin
+  before_action :require_sysadmin, except: [:index, :show]
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index
