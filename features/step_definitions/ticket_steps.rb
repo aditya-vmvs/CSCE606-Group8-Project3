@@ -17,8 +17,8 @@ Given("I go to the tickets list page") do
   visit tickets_path
 end
 
-Given("I am on the edit page for {string}") do |ticket_title|
-  ticket = Ticket.find_by(title: ticket_title)
+Given("I am on the edit page for {string}") do |subject|
+  ticket = Ticket.find_by(subject: subject)
   visit edit_ticket_path(ticket)
 end
 
@@ -53,10 +53,31 @@ end
 
 # Background / fixture steps
 Given("the following tickets exist:") do |table|
-  table.hashes.each do |ticket_attrs|
-    Ticket.create!(ticket_attrs)
+  table.hashes.each do |row|
+    # Find or create the requester
+    requester_email = row.delete("requester_email") || "default_requester@example.com"
+    requester = User.find_or_create_by!(
+      email: requester_email,
+      provider: "seed",
+      uid: SecureRandom.uuid,
+      role: "user",
+      name: "Test Requester"
+    )
+
+    # Create the ticket with a valid requester
+    Ticket.create!(
+      subject: row["subject"],
+      description: row["description"],
+      status: row["status"] || "open",
+      priority: row["priority"] || "low",
+      category: row["category"] || "General",
+      requester: requester
+    )
   end
 end
+
+
+
 
 # Assignment-specific steps
 Given("there is an agent named {string}") do |name|
@@ -118,4 +139,19 @@ end
 
 Then("the ticket should be automatically assigned to {string}") do |agent_name|
   step "the ticket should be assigned to \"#{agent_name}\""
+end
+
+When("I select {string} from {string}") do |option, field_label|
+  # Try exact match first
+  begin
+    select option, from: field_label
+  rescue Capybara::ElementNotFound
+    # Fallback: try titleized version for enum dropdowns (e.g., "open" → "Open")
+    begin
+      select option.titleize, from: field_label
+    rescue Capybara::ElementNotFound => e
+      # Helpful debug output when both attempts fail
+      raise Capybara::ElementNotFound, "Unable to find option '#{option}' (or '#{option.titleize}') for field '#{field_label}'. Original error: #{e.message}"
+    end
+  end
 end
