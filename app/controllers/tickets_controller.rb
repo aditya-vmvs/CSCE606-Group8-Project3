@@ -28,9 +28,10 @@ class TicketsController < ApplicationController
   end
 
   def create
-    @ticket = Ticket.new(ticket_params)
-    @ticket.requester = current_user
+    @ticket = Ticket.new
     authorize @ticket
+    @ticket.assign_attributes(ticket_params)
+    @ticket.requester = current_user
 
     if Setting.auto_round_robin?
       @ticket.assignee = next_agent_in_rotation
@@ -39,7 +40,7 @@ class TicketsController < ApplicationController
     if @ticket.save
       redirect_to @ticket, notice: "Ticket was successfully created."
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -52,7 +53,7 @@ class TicketsController < ApplicationController
     if @ticket.update(ticket_params)
       redirect_to @ticket, notice: "Ticket was successfully updated."
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -86,7 +87,8 @@ class TicketsController < ApplicationController
   end
 
   def ticket_params
-    params.require(:ticket).permit(:subject, :description, :status, :priority, :category, :assignee_id)
+    permitted = policy(@ticket).permitted_attributes
+    params.require(:ticket).permit(permitted)
   end
 
   def next_agent_in_rotation

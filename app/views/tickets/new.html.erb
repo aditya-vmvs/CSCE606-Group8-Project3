@@ -1,5 +1,15 @@
-<h1>New Ticket</h1>
+<div class="ticket-new">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <%= link_to "Tickets", tickets_path %>
+    <span aria-hidden="true">›</span>
+    <span>New Ticket</span>
+  </nav>
 
-<%= render 'form', ticket: @ticket %>
+  <h1>New Ticket</h1>
 
-<%= link_to "Back to tickets", tickets_path %>
+  <%= render 'form', ticket: @ticket %>
+
+  <div class="page-actions">
+    <%= link_to "Back to tickets", tickets_path, class: "btn" %>
+  </div>
+</div>
