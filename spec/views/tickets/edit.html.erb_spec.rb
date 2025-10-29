@@ -9,7 +9,7 @@ RSpec.describe "tickets/edit", type: :view do
       description: "MyText",
       priority: :low,
       requester: requester,
-      status: :pending
+      status: :in_progress
     )
   end
 
