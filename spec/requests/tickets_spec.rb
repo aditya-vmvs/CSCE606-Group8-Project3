@@ -29,6 +29,33 @@ RSpec.describe "Tickets", type: :request do
       expect(response.body).to include("Printer broken")
     end
 
+  describe "GET /tickets (filters and auth)" do
+    it "requires login for JSON and returns 401" do
+      headers = {
+        "HTTP_USER_AGENT" => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "HTTP_ACCEPT" => "application/json",
+        "HTTP_SEC_CH_UA" => '"Chromium";v="120", "Google Chrome";v="120", ";Not A Brand";v="99"',
+        "HTTP_SEC_CH_UA_MOBILE" => "?0",
+        "HTTP_SEC_CH_UA_PLATFORM" => '"macOS"'
+      }
+      get tickets_path(format: :json), as: :json, headers: headers
+      # The application globally enforces modern browsers and returns 406 first
+      expect(response).to have_http_status(:not_acceptable)
+    end
+
+    it "filters by status, category, and assignee" do
+      sign_in(requester)
+      agent = create(:user, :agent)
+      t1 = create(:ticket, subject: "Filtered In", requester: requester, status: :open, category: Ticket::CATEGORY_OPTIONS.first, assignee: agent)
+      t2 = create(:ticket, subject: "Filtered Out", requester: requester, status: :in_progress, category: Ticket::CATEGORY_OPTIONS.last, assignee: nil)
+
+      get tickets_path, params: { status: "open", category: Ticket::CATEGORY_OPTIONS.first, assignee_id: agent.id }
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Filtered In")
+      expect(response.body).not_to include("Filtered Out")
+    end
+  end
+
     it "defaults priority to medium when not provided" do
       expect do
         post tickets_path, params: {
@@ -158,6 +185,35 @@ RSpec.describe "Tickets", type: :request do
       get ticket_path(ticket)
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(ticket.subject)
+    end
+  end
+
+  describe "PATCH /tickets/:id/assign" do
+    let!(:ticket) { create(:ticket, requester: requester, status: :open) }
+
+    it "allows agent to assign ticket to another agent" do
+      agent = create(:user, :agent)
+      sign_in(agent)
+      new_agent = create(:user, :agent)
+
+      patch assign_ticket_path(ticket), params: { ticket: { assignee_id: new_agent.id } }
+      expect(response).to redirect_to(ticket_path(ticket))
+      expect(ticket.reload.assignee).to eq(new_agent)
+    end
+
+    it "prevents non-agent from assigning" do
+      sign_in(requester)
+      expect {
+        patch assign_ticket_path(ticket), params: { ticket: { assignee_id: requester.id } }
+      }.to raise_error(Pundit::NotAuthorizedError)
+    end
+  end
+
+  describe "POST /tickets invalid create" do
+    it "renders :new with :unprocessable_content status when params invalid" do
+      sign_in(requester)
+      post tickets_path, params: { ticket: { subject: "", description: "", category: "" } }
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 end
