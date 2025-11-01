@@ -15,7 +15,7 @@ class TeamMembershipPolicy < ApplicationPolicy
   # Only sysadmins can set user_id and role via params
   def permitted_attributes
     if user.sysadmin?
-      [:user_id, :role]
+      [ :user_id, :role ]
     else
       [] # or [:user_id] if you allow self-join; never :role here
     end
