@@ -164,8 +164,8 @@ This section shows the minimal steps to get the app running locally and an examp
 | Rails | 8.0.3 | `Gemfile` / `Gemfile.lock` (rails ~> 8.0.3) |
 | SQLite3 (gem) | 2.7.4 | `sqlite3` gem version in `Gemfile.lock` (native SQLite3 system version not specified in repo) |
 | PostgreSQL (pg gem) | 1.6.2 | `pg` gem version in `Gemfile.lock`; production DB adapter recommended as Postgres for Heroku deploys |
-| Git | not specified in repo | Git client version is not tracked in the repository; use a modern Git (2.x+ recommended) |
-| Heroku CLI | not specified in repo | CLI version not tracked; install latest Heroku CLI if deploying to Heroku |
+| Git | 2.x |  (2.x+ recommended) |
+| Heroku CLI | latest | install latest Heroku CLI if deploying to Heroku |
 
 ### 2️⃣ Local installation
 
