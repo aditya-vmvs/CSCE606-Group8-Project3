@@ -23,30 +23,6 @@ Ticketing System is a monolithic Rails application that handles ticket creation,
                                   +-----------+-----------+
                                               |
                                               v
-                                   +------------------------+
-                                            ## From Local Setup to Live Deployment 🚀
-
-                                            This guide provides everything you need to take the Ticketing System application from a fresh clone to a deployed application (examples: Heroku or Docker-based deploy).
-
-                                            ***
-
-                                            ### 1️⃣ Prerequisites
-
-                                            Ensure you have the following tools installed locally. Versions are suggestions — use a manager like `rbenv`/`asdf` to match your environment.
-
-                                            | Tool | Suggested Version | Install / Notes |
-                                            | :--- | :---: | :--- |
-                                            | Tool | Version in this project | Notes / source |
-                                            | :--- | :---: | :--- |
-                                            | Ruby | 3.4.5 | `.ruby-version` at repo root indicates Ruby 3.4.5 |
-                                            | Bundler | 2.7.1 | `BUNDLED WITH` section in `Gemfile.lock` |
-                                            | Rails | 8.0.3 | `Gemfile` / `Gemfile.lock` (rails ~> 8.0.3) |
-                                            | SQLite3 (gem) | 2.7.4 | `sqlite3` gem version in `Gemfile.lock` (native SQLite3 system version not specified in repo) |
-                                            | PostgreSQL (pg gem) | 1.6.2 | `pg` gem version in `Gemfile.lock`; production DB adapter recommended as Postgres for Heroku deploys |
-                                            | Git | not specified in repo | Git client version is not tracked in the repository; use a modern Git (2.x+ recommended) |
-                                            | Heroku CLI | not specified in repo | CLI version not tracked; install latest Heroku CLI if deploying to Heroku |
-
-                                            ***
 # Ticketing System
 
 An internal ticketing application built with Ruby on Rails. Users sign in via Google OAuth2, create and comment on tickets, manage teams and memberships, and staff members can approve or reject tickets.
@@ -74,6 +50,60 @@ ADRs capture high-level technical decisions. They live in `docs/adr/`.
 | ADR-007 | Approval workflow & Team visibility |
 | ADR-008 | CI pipeline (proposed) |
 | ADR-009 | Mailers & notifications (proposed) |
+| ADR-010 | Frontend: ERB + Turbo + Stimulus |
+
+---
+
+## Class Diagram
+
+Main domain models and relationships are represented in the class diagram (rendered image in `docs/`).
+
+![Class diagram](docs/project2_class_diagram.png)
+
+---
+
+## Components
+
+### Frontend
+- Server-rendered views (ERB) with Turbo and Stimulus for interactivity.
+- Key pages: Home/Dashboard, Tickets (index/new/edit/show), Users, Teams, Sessions (login).
+
+### Backend
+- Controllers: coordinate requests and authorization (Pundit) and render views or JSON.
+- Models: `User`, `Ticket`, `Comment`, `Team`, `TeamMembership`, `Setting`.
+- Policies: `TicketPolicy`, `TeamPolicy`, `CommentPolicy`, `TeamMembershipPolicy`.
+
+### Database
+- Default development/test DB: SQLite3 (configured in `config/database.yml`, DB files under `storage/`).
+- Production: PostgreSQL is recommended (Gemfile includes `pg`).
+
+### External integrations
+- Google OAuth2 (OmniAuth + omniauth-google-oauth2)
+# Ticketing System
+
+Ticketing System is a monolithic Ruby on Rails application for internal ticket tracking: users sign in with Google OAuth2, create and comment on tickets, manage teams and memberships, and staff can approve or reject tickets.
+
+## Architecture
+
+The architecture diagram shows the major pieces and how requests flow through the system. See `docs/project2architecture_diagram.png` in the `docs/` folder.
+
+![Architecture diagram](docs/project2architecture_diagram.png)
+
+### Architecture Decision Records (ADRs)
+
+ADRs capture high-level technical decisions. They live in `docs/adr/`.
+
+| ADR # | Title |
+|---|---|
+| ADR-001 | Monolithic Rails 8 architecture |
+| ADR-002 | Authentication with Google OAuth2 (OmniAuth) |
+| ADR-003 | Database: SQLite (dev/test) + PostgreSQL (prod) |
+| ADR-004 | Deployment: Heroku (primary), Docker optional |
+| ADR-005 | Testing: RSpec + Cucumber (tooling present) |
+| ADR-006 | Attachments: ActiveStorage |
+| ADR-007 | Approval workflow & Team visibility |
+| ADR-008 | CI pipeline (proposed / not configured) |
+| ADR-009 | Mailers (not implemented) |
 | ADR-010 | Frontend: ERB + Turbo + Stimulus |
 
 ---
@@ -160,14 +190,15 @@ This section shows the minimal steps to get the app running locally and an examp
 
 ### 1️⃣ Prerequisites
 
-| Tool | Suggested Version | Notes |
-|---:|:---:|:---|
-| Ruby | 3.2+ | Use rbenv/asdf/rvm to manage versions |
-| Bundler | 2.3+ | `gem install bundler` |
-| SQLite3 (dev) | 3.x | Installed locally for development |
-| PostgreSQL (prod) | 13+ | Recommended for production parity |
-| Git | 2.x | |
-| Heroku CLI | latest (optional) | If deploying to Heroku |
+| Tool | Version in this project | Notes / source |
+| :--- | :---: | :--- |
+| Ruby | 3.4.5 | `.ruby-version` at repo root indicates Ruby 3.4.5 |
+| Bundler | 2.7.1 | `BUNDLED WITH` section in `Gemfile.lock` |
+| Rails | 8.0.3 | `Gemfile` / `Gemfile.lock` (rails ~> 8.0.3) |
+| SQLite3 (gem) | 2.7.4 | `sqlite3` gem version in `Gemfile.lock` (native SQLite3 system version not specified in repo) |
+| PostgreSQL (pg gem) | 1.6.2 | `pg` gem version in `Gemfile.lock`; production DB adapter recommended as Postgres for Heroku deploys |
+| Git | not specified in repo | Git client version is not tracked in the repository; use a modern Git (2.x+ recommended) |
+| Heroku CLI | not specified in repo | CLI version not tracked; install latest Heroku CLI if deploying to Heroku |
 
 ### 2️⃣ Local installation
 
