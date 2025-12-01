@@ -110,9 +110,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_055843) do
     t.datetime "access_token_expires_at"
     t.integer "role", default: 0, null: false
     t.string "personal_email"
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
-    t.index ["role"], name: "index_users_on_role"
+    t.index [ "email" ], name: "index_users_on_email", unique: true
+    t.index [ "provider", "uid" ], name: "index_users_on_provider_and_uid", unique: true
+    t.index [ "role" ], name: "index_users_on_role"
   end
 
   add_foreign_key "comments", "tickets"
