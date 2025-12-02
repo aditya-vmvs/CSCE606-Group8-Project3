@@ -38,7 +38,7 @@ RSpec.describe TicketsController, type: :request do
 
       get tickets_path, params: { status: "resolved" }
 
-      expect(assigns(:tickets).pluck(:status)).to eq(["resolved"])
+      expect(assigns(:tickets).pluck(:status)).to eq([ "resolved" ])
     end
   end
 
@@ -133,7 +133,7 @@ RSpec.describe TicketsController, type: :request do
       expect(ticket.reload.approval_reason).to eq("Invalid")
     end
   end
-  
+
 
   # -----------------------------
   # REJECT
@@ -188,5 +188,4 @@ RSpec.describe TicketsController, type: :request do
       expect(assigns(:tickets_by_status)["open"]).not_to be_empty
     end
   end
-
 end

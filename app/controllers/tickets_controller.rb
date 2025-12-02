@@ -356,12 +356,12 @@ class TicketsController < ApplicationController
   def next_agent_in_rotation
     scope = User.where(role: :staff)
     scope = scope.joins(:teams).where(teams: { id: @ticket.team_id }) if @ticket.team_id.present?
-    
+
     agents = scope.order(:id)
-    return nil if agents.empty? 
+    return nil if agents.empty?
 
     last_assigned_index = Setting.get("last_assigned_index_#{@ticket.team_id || 'all'}")
-    
+
     if last_assigned_index.nil?
       index = 0
     else
@@ -375,13 +375,13 @@ class TicketsController < ApplicationController
   def assign_team_based_on_category
     # Define the mapping based on your specific team names
     target_team_name = case @ticket.category
-                       when 'Account Access', 'Technical Issue'
-                         'Support'
-                       when 'Feature Request'
-                         'Ops'
-                       else
+    when "Account Access", "Technical Issue"
+                         "Support"
+    when "Feature Request"
+                         "Ops"
+    else
                          nil # No default assignment for unknown categories
-                       end
+    end
 
     if target_team_name.present?
       # Find the team by name (using case-insensitive search to be safe)
@@ -389,5 +389,4 @@ class TicketsController < ApplicationController
       @ticket.team = team if team
     end
   end
-
 end
