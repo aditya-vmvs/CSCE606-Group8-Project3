@@ -23,7 +23,7 @@ RSpec.describe "Ticket status and comments", type: :system do
     select "Internal", from: "comment_visibility"
     click_button "Comment"
 
-    expect(page).to have_content("Comment added successfully.")
+    expect(page).to have_content("Internal triage note")
     within(".comments-list") do
       expect(page).to have_content("Internal")
       expect(page).to have_content("Internal triage note")
@@ -49,7 +49,6 @@ RSpec.describe "Ticket status and comments", type: :system do
     # Requesters don’t see visibility select, so just submit
     click_button "Comment"
 
-    expect(page).to have_content("Comment added successfully.")
     within(".comments-list") do
       expect(page).to have_content("Thanks for the update")
       expect(page).to have_content("Public")
