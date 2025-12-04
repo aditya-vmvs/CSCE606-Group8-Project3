@@ -5,8 +5,8 @@ module ApplicationHelper
     return "" if text.blank?
 
     renderer = Redcarpet::Render::HTML.new(
-      filter_html: true,     # 过滤用户输入的 HTML 标签，防止 XSS
-      hard_wrap: true,       # 将换行符转换为 <br>
+      filter_html: true,
+      hard_wrap: true,
       link_attributes: { rel: 'nofollow', target: "_blank" }
     )
 
