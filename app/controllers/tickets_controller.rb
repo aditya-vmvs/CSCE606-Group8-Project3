@@ -349,7 +349,7 @@ class TicketsController < ApplicationController
     @status_options = Ticket.statuses.keys
     @approval_status_options = Ticket.approval_statuses.keys
     @category_options = Ticket.where.not(category: [ nil, "" ]).distinct.order(:category).pluck(:category)
-    @assignee_options = User.where(id: @tickets.where.not(assignee_id: nil).select(:assignee_id).distinct)
+    @assignee_options = User.where(id: @tickets.reorder(nil).where.not(assignee_id: nil).select(:assignee_id).distinct)
   end
 
   def set_ticket
