@@ -6,7 +6,9 @@ A robust SaaS application for managing support tickets, designed for University 
 
 **Deployed Link:** https://csce606-group8-projecct3-92ec204546d7.herokuapp.com/ 
 
-**The technical documentation (regarding deployment, code structure, ADRs) have been placed in the docs/project3 folder**
+**The technical documentation (regarding deployment, code structure, ADRs) have been placed in the docs/project3 folder.**
+
+**For the .env file credentials, please contact any of the team members below.**
 
 ## Team Members
 
