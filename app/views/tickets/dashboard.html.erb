@@ -2,11 +2,16 @@
   <h1>My Tickets Dashboard</h1>
 
   <div class="dashboard-open-section">
-    <div class="open-tickets-card">
-      <h2>My Open Tickets</h2>
-      <p class="open-count"><%= @open_tickets_count %></p>
-    </div>
+  <div class="open-tickets-card">
+    <h2>My Open Tickets</h2>
+    <p class="open-count"><%= @open_tickets_count %></p>
   </div>
+
+  <div class="open-tickets-card">
+    <h2>Total Tickets (add by aditya-vmvs as part of final exam activity)</h2>
+    <p class="open-count"><%= @tickets_count %></p>
+  </div>
+</div>
 
   <div class="dashboard-recent-section">
     <h2>5 Most Recently Updated Tickets</h2>
@@ -63,6 +68,9 @@
 <style>
   .dashboard-open-section {
     margin: 2rem 0;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
 
   .open-tickets-card {
@@ -72,7 +80,10 @@
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     text-align: center;
+    flex: 1;
+    min-width: 240px;
   }
+
 
   .open-tickets-card h2 {
     margin: 0 0 0.5rem 0;

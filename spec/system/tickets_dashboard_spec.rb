@@ -37,6 +37,22 @@ RSpec.describe "Tickets dashboard", type: :system do
     expect(page).not_to have_content("Someone Else Task")
   end
 
+  it "shows total tickets count on the dashboard" do
+  sign_in(agent)
+
+  create(:ticket, subject: "My Open Task", status: :open, assignee: agent, requester: requester)
+  create(:ticket, subject: "My Resolved Task", status: :resolved, assignee: agent, requester: requester)
+  create(:ticket, subject: "Someone Else Task", status: :open, requester: requester)
+
+  visit personal_dashboard_path
+
+  expect(page).to have_content("Total Tickets")
+  within(".open-tickets-card", text: "Total Tickets") do
+    expect(page).to have_css(".open-count", text: "2")
+  end
+end
+
+
   it "groups tickets by status on the dashboard" do
     sign_in(agent)
 

@@ -221,6 +221,8 @@ class TicketsController < ApplicationController
                      .includes(:requester, :assignee, :team)
                      .order(updated_at: :desc)
 
+    @tickets_count = @tickets.count
+
     @open_tickets = @tickets.where(status: :open)
     @open_tickets_count = @open_tickets.count
     @recent_tickets = @tickets.limit(5)
@@ -230,6 +232,8 @@ class TicketsController < ApplicationController
     @tickets_by_status = Ticket.statuses.keys.each_with_object({}) do |s, h|
       h[s] = @tickets.select { |t| t.status == s }.first(5)
     end
+    @tickets_count = @tickets.count
+
   end
 
   def rate

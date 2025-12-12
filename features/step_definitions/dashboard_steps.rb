@@ -248,3 +248,9 @@ Then('the section should show status counts:') do |table|
     expect(page).to have_content("#{row['status'].titleize} (#{count})")
   end
 end
+
+Then("I should see total tickets count {string}") do |count|
+  within(".open-tickets-card", text: "Total Tickets") do
+    expect(page).to have_css(".open-count", text: count)
+  end
+end
